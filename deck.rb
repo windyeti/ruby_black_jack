@@ -12,7 +12,7 @@ class Deck
   end
 
   def create_cards
-    @cards = ["^", "-|-", "<>", "\/"].map do |suit|
+    @cards = ["^", "-|-", "<>", "\\/"].map do |suit|
       [2,3,4,5,6,7,8,9,10,"J","Q","K","A"].map do |value|
         amount =
           if value.is_a?(Numeric)
@@ -29,11 +29,11 @@ class Deck
   end
 
   def delete_card(card)
-    @card.delete(card)
+    @cards.delete(card)
   end
 
   def give_card
-    card = @card.sample
+    card = @cards.sample
     delete_card(card)
   end
 end

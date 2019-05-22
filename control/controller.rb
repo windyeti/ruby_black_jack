@@ -2,6 +2,7 @@ require_relative "interface"
 require_relative "../user"
 require_relative "../deck"
 require_relative "../accountant"
+require_relative "../referee"
 
 class Controller
   def initialize
@@ -18,35 +19,55 @@ class Controller
 
   def game
     loop do
+      Accountant::create_bet
       round
-      # winner = refere
-      # Accountant::(winner)
+      @interface.show_message(Interface::RESULT_ROUND)
+      @interface.show_result_step
+      winner = Referee::winner
+      Accountant::credit_winner(winner)
+      @interface.show_winner_round(winner)
       puts "Do you wish play? Press 'Enter' If no type 'exit'"
       break if gets.chomp == 'exit'
     end
   end
 
   def round
+    user_pass = false
+    diler_pass = false
+
     loop do
       @interface.show_message(Interface::QUESTION_ACTION)
       action = @interface.input_fixnum
-      action(action)
-      break if gets.chomp == "q"
-      puts @deck.cards.size
-      puts @user.hand.cards
-      # if (User::users[0].hand.cards.size > 2 && User::users[1].hand.cards.size > 2) ||
+      if action == 1
+        @user.hand.take_card(@deck.give_card)
+        user_pass = false
+      elsif action == 2
+        break
+      else
+        user_pass = true
+      end
+
+      diler_action
+
+      if (user_pass && diler_pass) || \
+        (@user.hand.cards.size > 2 && @diler.hand.cards.size > 2) || \
+        (user_pass && @diler.hand.real_amount_cards >= 17) || \
+        (@user.hand.real_amount_cards >= 21 || @diler.hand.real_amount_cards >= 21)
+        break
+      end
+
+      @interface.show_result_step_hide_diler
+
     end
   end
 
-  # QUESTION_ACTION = "Выберите действие:"\
-  # " 0 - пас, 1 - еще карту, 2 - вскрываемся"
-
-  def action(action)
-    case action
-    when 1 then
-      p card = @deck.give_card
-      @user.hand.take_card(card)
-    # when 1 then @user.hand.take_card(@deck.give_card)
+  def diler_action
+    if @diler.hand.real_amount_cards < 17
+      @diler.hand.take_card(@deck.give_card)
+      diler_pass = false
+    else
+      diler_pass = true
     end
   end
+
 end

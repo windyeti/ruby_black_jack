@@ -14,7 +14,7 @@ class User
     end
   end
 
-  attr_accessor :coins, :hand
+  attr_accessor :coins, :hand, :name
 
   def initialize(name)
     @name = name
@@ -24,19 +24,15 @@ class User
     self.class.add_users(self)
   end
 
-  def increment
-    coins += 10
+  def increment(value)
+    @coins += value
   end
 
-  def decrement
-    coins -= 10
+  def decrement(value)
+    @coins -= value
   end
 
   def validate!
     raise EMPTY_NAME if @name == ''
   end
-
-  private
-
-  attr_reader :name
 end
