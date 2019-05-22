@@ -9,65 +9,90 @@ class Controller
     @interface = Interface.new
   end
   def run
-      @deck = Deck.new
       @interface.show_message(Interface::QUESTION_NAME)
       name = @interface.input_string
       @user = User.new(name)
-      @diler = User.new('Diler')
+      @dealer = User.new('Dealer')
       game
+      @interface.show_message(Interface::BUY_BUY)
   end
 
   def game
     loop do
+      @deck = Deck.new
       Accountant::create_bet
+      deal_two_cards
       round
       @interface.show_message(Interface::RESULT_ROUND)
       @interface.show_result_step
       winner = Referee::winner
       Accountant::credit_winner(winner)
       @interface.show_winner_round(winner)
-      puts "Do you wish play? Press 'Enter' If no type 'exit'"
-      break if gets.chomp == 'exit'
+      if @user.coins < 10
+        @interface.show_message(Interface::ALARM_NO_COINS)
+        break
+      end
+      @interface.show_message(Interface::QUESTION_GAME)
+      break if gets.chomp != ''
+      clear_hand_cards
     end
   end
 
   def round
-    user_pass = false
-    diler_pass = false
+    @user_open = false
+    @user_pass = false
+    @dealer_pass = false
 
     loop do
-      @interface.show_message(Interface::QUESTION_ACTION)
+      break if check
+
+      @interface.show_result_step_hide_dealer
+
+      user_action
+
+      break if check
+
+      dealer_action
+    end
+  end
+
+  def check
+    (@user_open) || \
+    (@user_pass && @dealer_pass) || \
+    (@user.hand.cards.size > 2 && @dealer.hand.cards.size > 2) || \
+    (@user_pass && @diler.hand.real_amount_cards >= 17) || \
+    (@user.hand.real_amount_cards >= 21 || @dealer.hand.real_amount_cards >= 21)
+  end
+
+  def user_action
+    @interface.show_message(Interface::QUESTION_ACTION)
       action = @interface.input_fixnum
       if action == 1
         @user.hand.take_card(@deck.give_card)
-        user_pass = false
+        @user_pass = false
       elsif action == 2
-        break
+        @user_open = true
       else
-        user_pass = true
+        @user_pass = true
       end
-
-      diler_action
-
-      if (user_pass && diler_pass) || \
-        (@user.hand.cards.size > 2 && @diler.hand.cards.size > 2) || \
-        (user_pass && @diler.hand.real_amount_cards >= 17) || \
-        (@user.hand.real_amount_cards >= 21 || @diler.hand.real_amount_cards >= 21)
-        break
-      end
-
-      @interface.show_result_step_hide_diler
-
-    end
   end
 
-  def diler_action
-    if @diler.hand.real_amount_cards < 17
-      @diler.hand.take_card(@deck.give_card)
-      diler_pass = false
+  def dealer_action
+    if @dealer.hand.real_amount_cards < 17
+      @dealer.hand.take_card(@deck.give_card)
+      @dealer_pass = false
     else
-      diler_pass = true
+      @dealer_pass = true
     end
   end
 
+  def clear_hand_cards
+    User::users.each { |user| user.hand.clear_cards }
+  end
+
+  def deal_two_cards
+    User::users.each do |user|
+      2.times { user.hand.take_card(@deck.give_card) }
+    end
+  end
 end

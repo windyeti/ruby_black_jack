@@ -11,6 +11,10 @@ class Hand
     @cards << card
   end
 
+  def clear_cards
+    @cards = []
+  end
+
   def real_amount_cards
     cards_sort = @cards.sort_by { |card| card.amount }
     cards_sort.inject(0) do |acc, card|
