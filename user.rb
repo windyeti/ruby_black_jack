@@ -24,6 +24,10 @@ class User
     self.class.add_users(self)
   end
 
+  def can_take_card?
+    !@hand.full?
+  end
+
   def increment(value)
     @coins += value
   end

@@ -1,32 +1,31 @@
 class Accountant
-  BET = 10
-  @bank = 0
+  def initialize
+    @bet = 10
+    @bank = 0
+  end
 
-  class << self
-    def create_bet
-      User::users.each do |user|
-        subtract_cash(user)
-        @bank += BET
-      end
+  def create_bet(users)
+    users.each do |user|
+      withdraw(user)
+      @bank += @bet
     end
+  end
 
-    def credit_winner(winner)
-      if winner.nil?
-        User::users.each do |user|
-          plus_cash(user, BET)
-        end
-      else
-        plus_cash(winner, @bank)
-      end
-      @bank = 0
-    end
+  def debit(user, coins)
+    user.increment(coins)
+  end
 
-    def plus_cash(user, coins)
-      user.increment(coins)
-    end
+  def withdraw(user)
+    user.decrement(@bet)
+  end
 
-    def subtract_cash(user)
-      user.decrement(BET)
-    end
+  def refund(players)
+    refund_amount = @bank / players.size
+    players.each {|player| debit(player, refund_amount)}
+    reset_bank
+  end
+
+  def reset_bank
+    @bank = 0
   end
 end

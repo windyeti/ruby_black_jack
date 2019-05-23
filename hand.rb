@@ -1,10 +1,12 @@
+require_relative 'game_rules/game_rules'
+
 class Hand
+  include GameRules
+
+  attr_reader :cards
+
   def initialize
     @cards = []
-  end
-
-  def cards
-    @cards
   end
 
   def take_card(card)
@@ -15,14 +17,19 @@ class Hand
     @cards = []
   end
 
-  def real_amount_cards
-    cards_sort = @cards.sort_by { |card| card.amount }
-    cards_sort.inject(0) do |acc, card|
-      card_amount = card.amount
-      if acc + card.amount > 21 && card.value == "A"
-        card_amount = 1
-      end
-      acc + card_amount
+  def full?
+    cards.size >= MAX_CARDS_HAND
+  end
+
+  def ace_correction(sum)
+    if sum > BJ
+      @cards.each { |card| sum -= ACE_CORRECTION if sum > BJ && card.rank == 'A' }
     end
+    sum
+  end
+
+  def score
+    sum = @cards.sum(&:value)
+    ace_correction(sum)
   end
 end

@@ -1,23 +1,15 @@
-class Referee
-  class << self
-    def winner
-      user = User::users[0]
-      dealer = User::users[1]
-      user_amount = user.hand.real_amount_cards
-      dealer_amount = dealer.hand.real_amount_cards
+require_relative 'game_rules/game_rules'
 
-      winner =
-        if user_amount > 21
-          diler
-        elsif dealer_amount > 21
-          user
-        elsif dealer_amount > user_amount
-          diler
-        elsif dealer_amount < user_amount
-          user
-        else dealer_amount == user_amount
-          nil
-        end
+class Referee
+  include GameRules
+
+  def winners(users)
+    users = users.select do |user|
+      user.hand.score <= BJ
     end
+
+    users_amount = users.map { |user| user.hand.score }
+    max_amount = users_amount.max
+    users.select { |user| user.hand.score == max_amount }
   end
 end

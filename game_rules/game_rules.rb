@@ -1,0 +1,9 @@
+module GameRules
+  BJ = 21
+  MAX_DEALER_POINT = 17
+  MAX_CARDS_HAND = 3
+  ACTION_PASS = 0
+  ACTION_TAKE_CARD = 1
+  ACTION_OPEN = 2
+  ACE_CORRECTION = 10
+end
