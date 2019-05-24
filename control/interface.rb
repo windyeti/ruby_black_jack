@@ -1,8 +1,8 @@
 class Interface
   QUESTION_NAME = "Введите ваше имя:"
   RESULT_ROUND = "Результат раунда"
-  ALARM_NO_COINS = "У вас нет денег для продолжения игры"
-  QUESTION_GAME = "Continue the game? Press 'Enter'. Type any other to exit"
+  ALARM_NO_COINS = "У одного из игроков нет денег для продолжения игры"
+  QUESTION_GAME = "To repeat the game press 'Enter'. Type any other to exit"
   BUY_BUY = "До новых встреч!"
   QUESTION_ACTION = "Выберите действие:"\
   " 0 - пас, 1 - еще карту, 2 - вскрываемся"
@@ -21,7 +21,7 @@ class Interface
 
   def show_result_step_hide_dealer(players)
     players = players.map do |player|
-      player_cards = player.hand.cards.map do |card|
+      player_cards = player.cards.map do |card|
         if player.name == "Dealer"
           " * "
         else
@@ -29,7 +29,7 @@ class Interface
         end
       end
 
-      player_value = player.hand.score
+      player_value = player.score
 
       if player.name == "Dealer"
         "#{player.name} ==> #{player_cards.join(", ")}"
@@ -42,8 +42,8 @@ class Interface
 
   def show_result_round(players)
     players = players.map do |player|
-      player_cards = player.hand.cards.map { |card| "#{card.rank}#{card.suit}" }
-      player_value = player.hand.score
+      player_cards = player.cards.map { |card| "#{card.rank}#{card.suit}" }
+      player_value = player.score
       "#{player.name} ==> #{player_cards.join(", ")} : #{player_value}"
     end
     puts "#{players.join(" || ")}"
@@ -51,7 +51,7 @@ class Interface
 
   def show_winner_round(winners, players)
     result = winners.map do |user|
-      "#{user.name} набрав #{user.hand.score}. "
+      "#{user.name} набрав #{user.score}. "
     end
     name_coins = winners.map do |user|
       "#{user.name} : #{user.coins}"

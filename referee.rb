@@ -1,15 +1,15 @@
 require_relative 'game_rules/game_rules'
 
 class Referee
-  include GameRules
-
-  def winners(users)
-    users = users.select do |user|
-      user.hand.score <= BJ
+  def winners(user, dealer)
+    if user.score == dealer.score || user.score > GameRules::BJ && dealer.score > GameRules::BJ
+      [user, dealer]
+    elsif user.score > GameRules::BJ
+      [dealer]
+    elsif dealer.score > GameRules::BJ
+      [user]
+    else
+      user.score > dealer.score ? [user] : [dealer]
     end
-
-    users_amount = users.map { |user| user.hand.score }
-    max_amount = users_amount.max
-    users.select { |user| user.hand.score == max_amount }
   end
 end

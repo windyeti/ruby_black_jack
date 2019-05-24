@@ -1,8 +1,6 @@
 require_relative 'game_rules/game_rules'
 
 class Hand
-  include GameRules
-
   attr_reader :cards
 
   def initialize
@@ -18,18 +16,20 @@ class Hand
   end
 
   def full?
-    cards.size >= MAX_CARDS_HAND
-  end
-
-  def ace_correction(sum)
-    if sum > BJ
-      @cards.each { |card| sum -= ACE_CORRECTION if sum > BJ && card.ace? }
-    end
-    sum
+    cards.size >= GameRules::MAX_CARDS_HAND
   end
 
   def score
     sum = @cards.sum(&:value)
     ace_correction(sum)
+  end
+
+  private
+
+  def ace_correction(sum)
+    if sum > GameRules::BJ
+      @cards.each { |card| sum -= GameRules::ACE_CORRECTION if sum > GameRules::BJ && card.ace? }
+    end
+    sum
   end
 end

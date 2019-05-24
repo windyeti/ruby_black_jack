@@ -1,13 +1,10 @@
-class Accountant
-  def initialize
-    @bet = 10
-    @bank = 0
-  end
+require_relative 'game_rules/game_rules'
 
+class Accountant
   def create_bet(users)
     users.each do |user|
       withdraw(user)
-      @bank += @bet
+      debit_bank
     end
   end
 
@@ -16,7 +13,7 @@ class Accountant
   end
 
   def withdraw(user)
-    user.decrement(@bet)
+    user.decrement(GameRules::BET)
   end
 
   def refund(players)
@@ -27,5 +24,12 @@ class Accountant
 
   def reset_bank
     @bank = 0
+  end
+
+  private
+
+  def debit_bank
+    @bank ||= 0
+    @bank += GameRules::BET
   end
 end
