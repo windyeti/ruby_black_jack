@@ -3,16 +3,16 @@ require_relative "hand"
 class User
   EMPTY_NAME = "Name is empty!!!"
 
-  class << self
-    def users
-      @users
-    end
+  # class << self
+  #   def users
+  #     @users
+  #   end
 
-    def add_users(user)
-      @users ||= []
-      @users << user
-    end
-  end
+  #   def add_users(user)
+  #     @users ||= []
+  #     @users << user
+  #   end
+  # end
 
   attr_accessor :coins, :hand, :name
 
@@ -21,7 +21,7 @@ class User
     @coins = 100
     @hand = Hand.new
     validate!
-    self.class.add_users(self)
+    # self.class.add_users(self)
   end
 
   def can_take_card?

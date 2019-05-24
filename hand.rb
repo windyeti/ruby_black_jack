@@ -23,7 +23,7 @@ class Hand
 
   def ace_correction(sum)
     if sum > BJ
-      @cards.each { |card| sum -= ACE_CORRECTION if sum > BJ && card.rank == 'A' }
+      @cards.each { |card| sum -= ACE_CORRECTION if sum > BJ && card.ace? }
     end
     sum
   end
