@@ -19,25 +19,14 @@ class Interface
     puts message
   end
 
-  def show_result_step_hide_dealer(players)
-    players = players.map do |player|
-      player_cards = player.cards.map do |card|
-        if player.name == "Dealer"
-          " * "
-        else
-          "#{card.rank}#{card.suit}"
-        end
-      end
+  def show_hiden_card(player)
+    cards = player.cards.map {|card| " * "}.join(", ")
+    puts "#{player.name} : #{cards}"
+  end
 
-      player_value = player.score
-
-      if player.name == "Dealer"
-        "#{player.name} ==> #{player_cards.join(", ")}"
-      else
-        "#{player.name} ==> #{player_cards.join(", ")} : #{player_value}"
-      end
-    end
-    puts "#{players.join(" || ")}"
+  def show_card(player)
+    cards = player.cards.map {|card| "#{card.rank}#{card.suit}"}.join(", ")
+    puts "#{player.name} : #{cards}"
   end
 
   def show_result_round(players)
@@ -49,7 +38,7 @@ class Interface
     puts "#{players.join(" || ")}"
   end
 
-  def show_winner_round(winners, players)
+  def show_winner_round(winners)
     result = winners.map do |user|
       "#{user.name} набрав #{user.score}. "
     end
@@ -58,6 +47,9 @@ class Interface
     end
     word_winner = winners.size < 2 ? "Победил" : "Победили"
     puts "#{word_winner}: #{result.join(" || ")}"
+  end
+
+  def show_money(players)
     puts "Общий результат: #{players.map { |player| "#{player.name} : #{player.coins}" }.join(" || ")}"
   end
 end

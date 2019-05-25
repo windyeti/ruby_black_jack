@@ -16,7 +16,7 @@ class Accountant
     user.decrement(GameRules::BET)
   end
 
-  def refund(players)
+  def reward_winners(players)
     refund_amount = @bank / players.size
     players.each {|player| debit(player, refund_amount)}
     reset_bank

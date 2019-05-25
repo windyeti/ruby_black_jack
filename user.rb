@@ -28,6 +28,8 @@ class User
     @coins -= value
   end
 
+  private
+
   def validate!
     raise EMPTY_NAME if @name == ''
   end

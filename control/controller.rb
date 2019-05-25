@@ -7,7 +7,6 @@ require_relative "../referee"
 require_relative "../game_rules/game_rules"
 
 class Controller
-
   def initialize
     @interface = Interface.new
     @accountant = Accountant.new
@@ -31,8 +30,9 @@ class Controller
       @interface.show_message(Interface::RESULT_ROUND)
       @interface.show_result_round([@user, @dealer])
       winners = @referee.winners(@user, @dealer)
-      @accountant.refund(winners)
-      @interface.show_winner_round(winners, [@user, @dealer])
+      @accountant.reward_winners(winners)
+      @interface.show_winner_round(winners)
+      @interface.show_money([@user, @dealer])
       unless users_have_enough_money?
         @interface.show_message(Interface::ALARM_NO_COINS)
         break
@@ -47,7 +47,8 @@ class Controller
     loop do
       break if round_end?
 
-      @interface.show_result_step_hide_dealer([@user, @dealer])
+      @interface.show_card(@user)
+      @interface.show_hiden_card(@dealer)
 
       action = user_action
       break if GameRules::USER_ACTIONS[action] == :open_cards
@@ -59,8 +60,7 @@ class Controller
   end
 
   def round_end?
-    (!@user.can_take_card? && !@dealer.can_take_card?) ||\
-    (@user.score >= 21 && @dealer.can_take_card?)
+    !@user.can_take_card? && !@dealer.can_take_card?
   end
 
   def user_action
@@ -74,6 +74,7 @@ class Controller
   end
 
   def take_card
+    return unless @user.can_take_card?
     @user.take_card(@deck.give_card)
     return GameRules::ACTION_TAKE_CARD
   end
@@ -83,26 +84,23 @@ class Controller
   end
 
   def dealer_action
-    if @dealer.score < GameRules::MAX_DEALER_POINT
+    if @dealer.can_take_card?
       @dealer.take_card(@deck.give_card)
-      @dealer_pass = false
-    else
-      @dealer_pass = true
     end
   end
 
   def clear_hand_cards
-    ([@user, @dealer]).each { |user| user.clear_cards }
+    [@user, @dealer].each { |user| user.clear_cards }
   end
 
   def deal_two_cards
-    ([@user, @dealer]).each do |user|
+    [@user, @dealer].each do |user|
       2.times { user.take_card(@deck.give_card) }
     end
   end
 
   def users_have_enough_money?
-    ([@user, @dealer]).all? { |user| user.coins >= GameRules::BET }
+    [@user, @dealer].all? { |user| user.coins >= GameRules::BET }
   end
 
   def repeat_game?
