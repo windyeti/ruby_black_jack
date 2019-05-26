@@ -7,20 +7,17 @@ class Deck
   attr_reader :cards
 
   def initialize
-    @cards = create_cards
-  end
-
-  def random
-    @cards.random
+    @cards = []
+    create_cards
   end
 
   def create_cards
-    @cards = SUITS.map do |suit|
-      RANKS.map do |rank|
-        Card.new(suit: suit, rank: rank)
+    SUITS.each do |suit|
+      RANKS.each do |rank|
+        @cards << Card.new(suit: suit, rank: rank)
       end
     end
-    @cards.flatten.shuffle
+    @cards.shuffle!
   end
 
   def give_card

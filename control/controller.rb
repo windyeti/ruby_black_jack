@@ -48,7 +48,7 @@ class Controller
       break if round_end?
 
       @interface.show_card(@user)
-      @interface.show_hiden_card(@dealer)
+      @interface.show_hidden_card(@dealer)
 
       action = user_action
       break if GameRules::USER_ACTIONS[action] == :open_cards
@@ -64,9 +64,17 @@ class Controller
   end
 
   def user_action
-    @interface.show_message(Interface::QUESTION_ACTION)
-    action = @interface.input_fixnum
-    send(GameRules::USER_ACTIONS[action])
+    action = 0
+    loop do
+      @interface.show_message(Interface::QUESTION_ACTION)
+      action = @interface.input_fixnum
+      if (1..3).include?(action)
+        break
+      else
+        @interface.show_message(Interface::WRONG_INDEX)
+      end
+    end
+    send(GameRules::USER_ACTIONS[action - 1])
   end
 
   def pass
