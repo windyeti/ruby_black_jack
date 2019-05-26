@@ -7,7 +7,7 @@ module GameRules
   ACTION_TAKE_CARD = 1
   ACTION_OPEN = 2
   ACE_CORRECTION = 10
-  USER_ACTIONS = [:pass, :take_card, :open_cards]
+  USER_ACTIONS = %i[pass take_card open_cards].freeze
   FACE_VALUE = 10
   ACE_VALUE = 11
 end

@@ -12,6 +12,7 @@ class Controller
     @accountant = Accountant.new
     @referee = Referee.new
   end
+
   def run
     @interface.show_message(Interface::QUESTION_NAME)
     name = @interface.input_string
@@ -39,6 +40,7 @@ class Controller
       end
       @interface.show_message(Interface::QUESTION_GAME)
       break unless repeat_game?
+
       clear_hand_cards
     end
   end
@@ -68,37 +70,34 @@ class Controller
     loop do
       @interface.show_message(Interface::QUESTION_ACTION)
       action = @interface.input_fixnum
-      if (1..3).include?(action)
-        break
-      else
-        @interface.show_message(Interface::WRONG_INDEX)
-      end
+      break if (1..3).include?(action)
+
+      @interface.show_message(Interface::WRONG_INDEX)
     end
     send(GameRules::USER_ACTIONS[action - 1])
   end
 
   def pass
-    return GameRules::ACTION_PASS
+    GameRules::ACTION_PASS
   end
 
   def take_card
     return unless @user.can_take_card?
+
     @user.take_card(@deck.give_card)
-    return GameRules::ACTION_TAKE_CARD
+    GameRules::ACTION_TAKE_CARD
   end
 
   def open_cards
-    return GameRules::ACTION_OPEN
+    GameRules::ACTION_OPEN
   end
 
   def dealer_action
-    if @dealer.can_take_card?
-      @dealer.take_card(@deck.give_card)
-    end
+    @dealer.take_card(@deck.give_card) if @dealer.can_take_card?
   end
 
   def clear_hand_cards
-    [@user, @dealer].each { |user| user.clear_cards }
+    [@user, @dealer].each(&:clear_cards)
   end
 
   def deal_two_cards

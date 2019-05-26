@@ -18,7 +18,7 @@ class Accountant
 
   def reward_winners(players)
     refund_amount = @bank / players.size
-    players.each {|player| debit(player, refund_amount)}
+    players.each { |player| debit(player, refund_amount) }
     reset_bank
   end
 

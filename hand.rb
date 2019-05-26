@@ -28,7 +28,9 @@ class Hand
 
   def ace_correction(sum)
     if sum > GameRules::BJ
-      @cards.each { |card| sum -= GameRules::ACE_CORRECTION if sum > GameRules::BJ && card.ace? }
+      @cards.each do |card|
+        sum -= GameRules::ACE_CORRECTION if sum > GameRules::BJ && card.ace?
+      end
     end
     sum
   end

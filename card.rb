@@ -10,7 +10,7 @@ class Card
   end
 
   def value_rank
-    if %w(J Q K).include?(@rank)
+    if %w[J Q K].include?(@rank)
       GameRules::FACE_VALUE
     elsif ace?
       GameRules::ACE_VALUE

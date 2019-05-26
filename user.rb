@@ -4,7 +4,7 @@ require 'forwardable'
 class User
   extend Forwardable
 
-  EMPTY_NAME = "Name is empty!!!"
+  EMPTY_NAME = "Name is empty!!!".freeze
 
   attr_accessor :coins, :hand, :name
   def_delegators :hand, :score, :take_card, :cards, :clear_cards

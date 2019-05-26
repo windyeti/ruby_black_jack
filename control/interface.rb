@@ -1,12 +1,13 @@
 class Interface
-  QUESTION_NAME = "Введите ваше имя:"
-  RESULT_ROUND = "Результат раунда"
-  ALARM_NO_COINS = "У одного из игроков нет денег для продолжения игры"
-  QUESTION_GAME = "To repeat the game press 'Enter'. Type any other to exit"
-  BUY_BUY = "До новых встреч!"
-  WRONG_INDEX = "Некорректный ввод"
+  QUESTION_NAME = "Введите ваше имя:".freeze
+  RESULT_ROUND = "Результат раунда".freeze
+  ALARM_NO_COINS = "У одного из игроков нет денег для продолжения игры".freeze
+  QUESTION_GAME = "To repeat the game press 'Enter'. "\
+  "Type any other to exit".freeze
+  BUY_BUY = "До новых встреч!".freeze
+  WRONG_INDEX = "Некорректный ввод".freeze
   QUESTION_ACTION = "Выберите действие:"\
-  " 1 - пас, 2 - еще карту, 3 - вскрываемся"
+  " 1 - пас, 2 - еще карту, 3 - вскрываемся".freeze
 
   def input_string
     gets.chomp
@@ -21,13 +22,13 @@ class Interface
   end
 
   def show_hidden_card(player)
-    cards = player.cards.map {|card| " * "}.join(", ")
+    cards = player.cards.map { " * " }.join(", ")
     puts "#{player.name} : #{cards}"
   end
 
   def show_card(player)
     value = player.cards.sum(&:value)
-    cards = player.cards.map {|card| "#{card.rank}#{card.suit}"}.join(", ")
+    cards = player.cards.map { |card| "#{card.rank}#{card.suit}" }.join(", ")
     puts "#{player.name} : #{cards} ==> #{value}"
   end
 
@@ -49,6 +50,9 @@ class Interface
   end
 
   def show_money(players)
-    puts "Общий результат: #{players.map { |player| "#{player.name} : #{player.coins}" }.join(" || ")}"
+    result = players.map do |player|
+      "#{player.name} : #{player.coins}"
+    end
+    puts "Общий результат: #{result.join(" || ")}"
   end
 end
