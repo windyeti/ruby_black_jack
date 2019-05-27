@@ -1,6 +1,8 @@
 require_relative 'game_rules/game_rules'
 
 class Card
+  SUITS = ['♠', '♥', '♦', '♣'].freeze
+  RANKS = [*(2..10), 'J', 'K', 'Q', 'A'].freeze
   attr_accessor :suit, :rank, :value
 
   def initialize(suit:, rank:)

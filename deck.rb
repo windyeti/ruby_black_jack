@@ -1,9 +1,6 @@
 require_relative "card.rb"
 
 class Deck
-  SUITS = ['♠', '♥', '♦', '♣'].freeze
-  RANKS = [*(2..10), 'J', 'K', 'Q', 'A'].freeze
-
   attr_reader :cards
 
   def initialize
@@ -12,8 +9,8 @@ class Deck
   end
 
   def create_cards
-    SUITS.each do |suit|
-      RANKS.each do |rank|
+    Card::SUITS.each do |suit|
+      Card::RANKS.each do |rank|
         @cards << Card.new(suit: suit, rank: rank)
       end
     end
